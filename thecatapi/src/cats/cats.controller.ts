@@ -1,11 +1,16 @@
 import { Controller, Get, Post, Put, Delete, HttpCode, Param, Body } from '@nestjs/common';
-import { CatDto } from './dtocat';
+import { Cat } from 'src/cats/interfaces/cat.interface';
+import { CatsService } from './cats.service';
+import { CatDto } from './dto/dtocat';
 
 @Controller('cats')
 export class CatsController {
+
+    constructor(private catsService: CatsService) {}
+
     @Get()
-    getAllCats(): string{
-        return "hey";
+    getAllCats(): Cat []{
+        return this.catsService.findAll();
     }
 
     @Get(":id")
@@ -18,6 +23,8 @@ export class CatsController {
     @HttpCode(201)
     saveCat(@Body() data:CatDto): string {
         console.log(data.name);
+        this.catsService.createCat(data);
+
         return "created";
     }
 
